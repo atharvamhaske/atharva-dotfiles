@@ -1,0 +1,5 @@
+# Ghostty controls terminal rendering, including font size.
+font-size = 18
+window-padding-x = 12
+window-padding-y = 10
+theme = Cursor Dark

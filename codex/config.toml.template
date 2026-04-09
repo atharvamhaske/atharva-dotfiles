@@ -1,0 +1,28 @@
+model = "gpt-5.3-codex"
+model_reasoning_effort = "low"
+[projects."/Users/atharvamhaske"]
+trust_level = "trusted"
+
+[projects."/Users/atharvamhaske/Development/open source/swarm-external-secrets"]
+trust_level = "trusted"
+
+[projects."/Users/atharvamhaske/Development/open source/pmg"]
+trust_level = "trusted"
+
+[projects."/Users/atharvamhaske/Development/swarm-scripts"]
+trust_level = "trusted"
+
+[projects."/Users/atharvamhaske/Development/open source/bifrost"]
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
+[plugins."github@openai-curated"]
+enabled = true
+
+[plugins."notion@openai-curated"]
+enabled = true
+
+openai_base_url="http://localhost:8080/openai/v1"
+env_key="<REDACTED>"
