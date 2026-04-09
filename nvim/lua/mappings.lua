@@ -74,24 +74,6 @@ map("n", "<leader>gd", "<cmd>Gitsigns diffthis<CR>", { desc = "Gitsigns Diff thi
 map("n", "]h", "<cmd>Gitsigns next_hunk<CR>", { desc = "Gitsigns Next hunk" })
 map("n", "[h", "<cmd>Gitsigns prev_hunk<CR>", { desc = "Gitsigns Previous hunk" })
 
--- leetcode mappings
-map("n", "<leader>lr", "<cmd>Leet run<CR>", { desc = "LeetCode Run tests" })
-map("n", "<leader>ls", "<cmd>Leet submit<CR>", { desc = "LeetCode Submit solution" })
-
--- menu mappings
--- Keyboard users
-vim.keymap.set("n", "<C-t>", function()
-  require("menu").open "default"
-end, {})
-
--- mouse users + nvimtree users!
-vim.keymap.set("n", "<RightMouse>", function()
-  vim.cmd.exec '"normal! \\<RightMouse>"'
-
-  local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
-  require("menu").open(options, { mouse = true })
-end, {})
-
 -- codeforces directory creation keybinding
 
 vim.keymap.set("n", "<leader>cf", function()
