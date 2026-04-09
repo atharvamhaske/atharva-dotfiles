@@ -1,1 +1,1 @@
-require("bishalr0y")
+require("core")
