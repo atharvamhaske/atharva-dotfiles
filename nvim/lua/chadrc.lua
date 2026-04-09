@@ -4,7 +4,7 @@
 
 local options = {
   base46 = {
-    theme = "chadracula-evondev",
+    theme = "onedark",
     -- transparency = true,
     hl_override = {
       NvDashAscii = {
