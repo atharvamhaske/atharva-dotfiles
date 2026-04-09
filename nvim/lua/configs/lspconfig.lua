@@ -1,96 +1,71 @@
--- load defaults i.e lua_lsp
 require("nvchad.configs.lspconfig").defaults()
 
-local lspconfig = require "lspconfig"
-local on_init = require("nvchad.configs.lspconfig").on_init
+local nvlsp = require "nvchad.configs.lspconfig"
 
--- EXAMPLE
-local servers = {
-  "cssls",
+local function configure(server, opts)
+  vim.lsp.config(server, vim.tbl_deep_extend("force", {
+    on_attach = nvlsp.on_attach,
+    on_init = nvlsp.on_init,
+    capabilities = nvlsp.capabilities,
+  }, opts or {}))
+  vim.lsp.enable(server)
+end
+
+for _, server in ipairs({
   "bashls",
   "jsonls",
   "yamlls",
   "marksman",
   "dockerls",
   "docker_compose_language_service",
-}
-local nvlsp = require "nvchad.configs.lspconfig"
-
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+  "cssls",
+  "html",
+  "ts_ls",
+  "tailwindcss",
+  "emmet_language_server",
+  "gopls",
+  "pyright",
+  "ruff",
+  "clangd",
+  "elixirls",
+}) do
+  configure(server)
 end
 
-local on_attach = require("nvchad.configs.lspconfig").on_attach
-local capabilities = require("nvchad.configs.lspconfig").capabilities
+configure("html", {
+  filetypes = { "html", "heex" },
+})
 
--- HTML LSP with HEEx support
-lspconfig.html.setup {
-  on_attach = on_attach,
-  on_init = on_init,
-  capabilities = capabilities,
-  filetypes = { "html", "heex" }, -- Add heex here
-}
-
--- go LSP
-lspconfig.gopls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+configure("gopls", {
   cmd = { "gopls" },
   filetypes = { "go", "gomod", "gowork", "gotmpl" },
-  -- root_dir = util.root_pattern("go.work", "go.mod", ".git"),
   settings = {
     gopls = {
       completeUnimported = true,
       usePlaceholders = true,
-      analyses = {
-        unusedparams = true,
-      },
+      analyses = { unusedparams = true },
       gofumpt = true,
     },
   },
-}
+})
 
-local python_servers = {
-  "pyright",
-  "ruff",
-}
-
-for _, lsp in ipairs(python_servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    filetypes = { "python" },
-    root_dir = function(fname)
-      -- return util.root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git")(fname) or util.path.dirname(fname)
-    end,
-    settings = {
-      python = {
-        analysis = {
-          typeCheckingMode = "basic", -- or "strict"
-          autoSearchPaths = true,
-          useLibraryCodeForTypes = true,
-          diagnosticMode = "workspace",
-        },
+configure("pyright", {
+  filetypes = { "python" },
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "basic",
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "workspace",
       },
     },
-  }
-end
+  },
+})
 
--- TypeScript LSP
-lspconfig.ts_ls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
+configure("ruff", { filetypes = { "python" } })
 
--- Tailwind CSS LSP with HEEx support
-lspconfig.tailwindcss.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+configure("tailwindcss", {
   filetypes = {
     "html",
     "css",
@@ -105,10 +80,6 @@ lspconfig.tailwindcss.setup {
     "elixir",
     "eelixir",
   },
-  root_dir = function(fname)
-    local util = require "lspconfig.util"
-    return util.root_pattern("tailwind.config.js", "tailwind.config.ts", "assets/css/app.css", "mix.exs")(fname)
-  end,
   init_options = {
     userLanguages = {
       elixir = "html-eex",
@@ -134,12 +105,9 @@ lspconfig.tailwindcss.setup {
       validate = true,
     },
   },
-}
+})
 
--- emmet lsp with HEEx support
-lspconfig.emmet_language_server.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+configure("emmet_language_server", {
   filetypes = {
     "css",
     "eruby",
@@ -152,59 +120,30 @@ lspconfig.emmet_language_server.setup {
     "pug",
     "typescript",
     "typescriptreact",
-    "heex", -- Add heex here for Emmet support
+    "heex",
   },
-  init_options = {
-    ---@type table<string, string>
-    includeLanguages = {},
-    --- @type string[]
-    excludeLanguages = {},
-    --- @type string[]
-    extensionsPath = {},
-    --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
-    preferences = {},
-    --- @type boolean Defaults to `true`
-    showAbbreviationSuggestions = true,
-    --- @type "always" | "never" Defaults to `"always"`
-    showExpandedAbbreviation = "always",
-    --- @type boolean Defaults to `false`
-    showSuggestionsAsSnippets = false,
-    --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
-    syntaxProfiles = {},
-    --- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
-    variables = {},
-  },
-}
+})
 
--- c & cpp setup
-lspconfig.clangd.setup {
+configure("clangd", {
   on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
     client.server_capabilities.documentRangeFormattingProvider = false
-    on_attach(client, bufnr)
+    nvlsp.on_attach(client, bufnr)
   end,
-  on_init = on_init,
-  capabilities = capabilities,
-}
+})
 
--- elixir LSP (ElixirLS)
-lspconfig.elixirls.setup {
-  on_attach = on_attach,
-  on_init = on_init,
-  capabilities = capabilities,
-
+configure("elixirls", {
   cmd = { "elixir-ls" },
   filetypes = { "elixir", "eelixir", "heex" },
-
   settings = {
     elixirLS = {
       dialyzerEnabled = true,
-      fetchDeps = false, -- set true if you want auto deps fetching
+      fetchDeps = false,
       enableTestLenses = true,
       suggestSpecs = true,
     },
   },
-}
+})
 
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
   callback = function()

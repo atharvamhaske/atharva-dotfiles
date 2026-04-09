@@ -5,28 +5,6 @@ return {
     opts = require "configs.conform",
   },
 
-  -- These are some examples, uncomment them if you want to see them work!
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
-  {
-    "williamboman/mason.nvim",
-  },
-  {
-    "mfussenegger/nvim-dap",
-  },
-  {
-    "leoluz/nvim-dap-go",
-    ft = "go",
-    dependencies = "mfussenegger/nvim-dap",
-    config = function(_, opts)
-      require("dap-go").setup(opts)
-    end,
-  },
-
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -35,14 +13,7 @@ return {
     end,
   },
   {
-    "olexsmir/gopher.nvim",
-    ft = "go",
-    config = function(_, opts)
-      require("gopher").setup(opts)
-    end,
-    build = function()
-      vim.cmd [[silent! GoInstallDeps]]
-    end,
+    "williamboman/mason.nvim",
   },
   {
     "nvim-treesitter/nvim-treesitter",

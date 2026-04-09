@@ -16,22 +16,6 @@ map("v", "k", "gk", { desc = "Move up by visual line" })
 
 vim.keymap.set("i", "<C-h>", "<C-w>", { desc = "Delete the whole word in insert mode" })
 
--- DAP mappings
-map("n", "<leader>db", "<cmd> DapToggleBreakpoint <CR>", { desc = " DAP Add breakpoint at line" })
-map("n", "<leader>dus", function()
-  local widgets = require "dap.ui.widgets"
-  local sidebar = widgets.sidebar(widgets.scopes)
-  sidebar.open()
-end, { desc = "DAP Open debugging sidebar" })
-
--- DAP Go mappings
-map("n", "<leader>dgt", function()
-  require("dap-go").debug_test()
-end, { desc = "DAP Debug go test" })
-map("n", "<leader>dgl", function()
-  require("dap-go").debug_last()
-end, { desc = "DAP Debug last go test" })
-
 map({ "n", "t" }, "<leader>tv", function()
   require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
 end, { desc = "terminal vertical toggle" })
@@ -39,12 +23,6 @@ end, { desc = "terminal vertical toggle" })
 map({ "n", "t" }, "<leader>tt", function()
   require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
 end, { desc = "terminal horizontal toggle" })
-
-
-
--- Gopher mappings
-map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Gopher Add json struct tags" })
-map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Gopher Add yaml struct tags" })
 
 -- Persistence mappings
 map("n", "<leader>qs", function()

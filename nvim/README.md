@@ -1,6 +1,6 @@
 # Atharva Neovim Config (NvChad)
 
-NvChad-based Neovim config with LSP, formatting, DAP, terminal, tmux navigation, and productivity mappings.
+NvChad-based Neovim config with LSP, formatting, terminal, tmux navigation, and practical mappings.
 
 ## Install
 
@@ -61,12 +61,6 @@ LSP:
 - `<leader>lm` Mason
 - `<leader>lf` floating diagnostics
 
-Debugging:
-- `<leader>db` toggle breakpoint
-- `<leader>dus` open DAP scopes sidebar
-- `<leader>dgt` debug current Go test
-- `<leader>dgl` debug last Go test
-
 Git:
 - `<leader>ph` preview hunk
 - `<leader>bl` blame line
@@ -77,7 +71,3 @@ Git:
 
 Competitive coding helper:
 - `<leader>cf` create problem folder + cpp file + tests
-
-LeetCode:
-- `<leader>lr` run tests
-- `<leader>ls` submit solution
