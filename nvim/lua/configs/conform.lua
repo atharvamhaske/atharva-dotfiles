@@ -12,14 +12,8 @@ local opts = {
     typescript = { "prettierd" },
     typescriptreact = { "prettierd" },
     css = { "prettierd" },
-    html = { "prettierd", "djlint" },
+    html = { "prettierd" },
     markdown = { "prettierd" },
-    c = { "clang-format" },
-    cpp = { "clang-format" },
-    -- elixir
-    elixir = { "mix" },
-    eelixir = { "mix" },
-    heex = { "mix" },
   },
 
   format_on_save = {

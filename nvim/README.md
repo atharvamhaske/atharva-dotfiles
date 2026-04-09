@@ -25,8 +25,6 @@ Inside Neovim:
 - `cssls`
 - `tailwindcss`
 - `emmet_language_server`
-- `clangd`
-- `elixirls`
 - `bashls`
 - `jsonls`
 - `yamlls`
@@ -68,6 +66,3 @@ Git:
 - `<leader>gd` diff this
 - `]h` next hunk
 - `[h` previous hunk
-
-Competitive coding helper:
-- `<leader>cf` create problem folder + cpp file + tests

@@ -26,14 +26,12 @@ for _, server in ipairs({
   "gopls",
   "pyright",
   "ruff",
-  "clangd",
-  "elixirls",
 }) do
   configure(server)
 end
 
 configure("html", {
-  filetypes = { "html", "heex" },
+  filetypes = { "html" },
 })
 
 configure("gopls", {
@@ -76,34 +74,6 @@ configure("tailwindcss", {
     "typescriptreact",
     "vue",
     "svelte",
-    "heex",
-    "elixir",
-    "eelixir",
-  },
-  init_options = {
-    userLanguages = {
-      elixir = "html-eex",
-      eelixir = "html-eex",
-      heex = "html-eex",
-    },
-  },
-  settings = {
-    tailwindCSS = {
-      includeLanguages = {
-        elixir = "html",
-        eelixir = "html",
-        heex = "html",
-      },
-      experimental = {
-        classRegex = {
-          [[class: "([^"]*)]],
-          [[class: '([^']*)]],
-          '~H""".*class="([^"]*)".*"""',
-          [[class="([^"]*)]],
-        },
-      },
-      validate = true,
-    },
   },
 })
 
@@ -120,28 +90,6 @@ configure("emmet_language_server", {
     "pug",
     "typescript",
     "typescriptreact",
-    "heex",
-  },
-})
-
-configure("clangd", {
-  on_attach = function(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
-    nvlsp.on_attach(client, bufnr)
-  end,
-})
-
-configure("elixirls", {
-  cmd = { "elixir-ls" },
-  filetypes = { "elixir", "eelixir", "heex" },
-  settings = {
-    elixirLS = {
-      dialyzerEnabled = true,
-      fetchDeps = false,
-      enableTestLenses = true,
-      suggestSpecs = true,
-    },
   },
 })
 
