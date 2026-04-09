@@ -2,6 +2,18 @@ require "nvchad.mappings"
 
 local map = vim.keymap.set
 
+-- Starter-friendly essentials
+map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Explorer Toggle" })
+map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })
+map("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit window" })
+map("n", "<leader>/", "<cmd>Telescope live_grep<CR>", { desc = "Search text" })
+map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find files" })
+map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Find buffers" })
+map("n", "<leader>h", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+map("n", "<leader>sv", "<cmd>vsplit<CR>", { desc = "Split vertical" })
+map("n", "<leader>sh", "<cmd>split<CR>", { desc = "Split horizontal" })
+map("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close split" })
+
 -- General mappings
 map("n", "<C-h>", "<cmd> TmuxNavigateLeft<CR>", { desc = "TMUX window left" })
 map("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", { desc = "TMUX window right" })

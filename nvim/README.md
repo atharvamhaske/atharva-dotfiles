@@ -47,6 +47,16 @@ Inside Neovim:
 Leader key: `<Space>`
 
 General:
+- `<leader>e` file explorer toggle
+- `<leader>w` save file
+- `<leader>q` quit current window
+- `<leader>h` clear search highlight
+- `<leader>ff` find files
+- `<leader>fb` find buffers
+- `<leader>/` search text in project
+- `<leader>sv` vertical split
+- `<leader>sh` horizontal split
+- `<leader>sx` close split
 - `<C-h>/<C-j>/<C-k>/<C-l>` tmux navigation
 - `<leader>tv` vertical terminal
 - `<leader>tt` horizontal terminal
