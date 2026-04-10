@@ -1,4 +1,4 @@
-# Bishal Dotfiles
+# Atharva Dotfiles
 
 One repo for terminal + editor setup:
 - Neovim config
