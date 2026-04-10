@@ -34,24 +34,4 @@ I changed your local Neovim mapping:
 - Move panes: `Prefix` then `h/j/k/l`
 - Reload tmux config: `Prefix` then `r`
 
-## Install this dotfiles repo
-```bash
-# from your home directory
-ln -sfn ~/bishal-dotfiles/nvim ~/.config/nvim
-ln -sfn ~/bishal-dotfiles/ghostty ~/.config/ghostty
-ln -sfn ~/bishal-dotfiles/zsh/.zshrc ~/.zshrc
-ln -sfn ~/bishal-dotfiles/tmux/.tmux.conf ~/.tmux.conf
 
-# codex config template is sanitized; copy manually and add your own secret key
-cp ~/bishal-dotfiles/codex/config.toml.template ~/.codex/config.toml
-```
-
-## GitHub push (after `gh` re-login)
-```bash
-cd ~/bishal-dotfiles
-git init
-git add .
-git commit -m "chore: add bishal dotfiles (nvim/tmux/ghostty/zsh/codex template)"
-gh auth login
-gh repo create bishal-dotfiles --public --source=. --remote=origin --push
-```
