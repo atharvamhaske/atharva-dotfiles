@@ -1,0 +1,5 @@
+^/scripts$
+^/\.stow-local-ignore$
+^/\.git$
+^/README\.md$
+^/\.gitignore$
