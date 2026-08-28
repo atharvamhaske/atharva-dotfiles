@@ -1,8 +1,11 @@
 # atharva-dotfiles
 
-Centralized AI agent rules and skills for Claude Code, Codex, Cursor, and OpenCode. Everything
-lives in this repo and gets projected onto `$HOME` with `stow` — no per-repo copying, no manual
+Centralized AI agent rules and skills for Claude Code, Codex, and OpenCode. Everything lives in
+this repo and gets projected onto `$HOME` with `stow` — no per-repo copying, no manual
 symlinking, no vendor lock-in to any one tool.
+
+Cursor is the one exception: it has no on-disk global-rules file to symlink into (see
+"Cursor is different" below) and no personal-skills concept at all.
 
 ## Layout
 
@@ -18,8 +21,6 @@ atharva-dotfiles/
 ├── .codex/
 │   ├── AGENTS.md → ../.agents/AGENTS.md
 │   └── skills/*  → ../../.agents/skills/<name>
-├── .cursor/rules/
-│   └── global.md → ../../.agents/AGENTS.md
 ├── .config/opencode/
 │   ├── AGENTS.md → ../../.agents/AGENTS.md
 │   └── skills/*  → ../../../.agents/skills/<name>
@@ -29,15 +30,29 @@ atharva-dotfiles/
 
 ## What each agent reads
 
-| Agent       | Global config              | Project config     |
-|-------------|-----------------------------|--------------------|
-| Claude Code | `~/.claude/CLAUDE.md`       | `./CLAUDE.md`      |
-| Codex       | `~/.codex/AGENTS.md`        | `./AGENTS.md`       |
-| Cursor      | `~/.cursor/rules/global.md` | Project Rules       |
-| OpenCode    | `~/.config/opencode/AGENTS.md` | `./AGENTS.md`    |
+| Agent       | Global config              | Project config     | Skills   |
+|-------------|-----------------------------|--------------------|----------|
+| Claude Code | `~/.claude/CLAUDE.md`       | `./CLAUDE.md`      | `~/.claude/skills/*` — automatic in every repo |
+| Codex       | `~/.codex/AGENTS.md`        | `./AGENTS.md`      | `~/.codex/skills/*` — automatic in every repo |
+| OpenCode    | `~/.config/opencode/AGENTS.md` | `./AGENTS.md`   | `~/.config/opencode/skills/*` — automatic in every repo |
+| Cursor      | *(none — see below)*        | `.cursor/rules/*.mdc`, per repo | *(none — no personal-skills concept)* |
 
-All four ultimately point at the same file, `.agents/AGENTS.md`. Edit it once, every tool sees
-the change immediately — no rebuild, no re-copy.
+Three of these point at the same file, `.agents/AGENTS.md`. Edit it once, all three see the
+change immediately, in every repo, with zero further action — no rebuild, no re-copy, no
+per-project file required unless you want repo-specific additions on top.
+
+## Cursor is different
+
+Cursor's global "User Rules" (Cursor Settings → Rules → User Rules) are stored as app state, not
+a file on disk — there is nothing under `~/.cursor/` to symlink into for global behavior, and
+Cursor has no per-user skills directory at all. Two options, neither automatic:
+
+- **One-time, not per-repo:** paste `.agents/AGENTS.md`'s contents into Cursor Settings → Rules
+  → User Rules once per machine. It then applies to every project on that machine, same as the
+  other three tools — just not file-managed, so this repo can't push updates to it automatically.
+- **Per-repo:** add a `.cursor/rules/*.mdc` file to a specific project if you want Cursor-specific
+  behavior scoped to just that repo (this is the intended, supported use of that directory —
+  project rules, not global ones).
 
 ## Stowing
 
