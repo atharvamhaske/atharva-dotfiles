@@ -1,17 +1,17 @@
 # atharva-dotfiles
 
-Centralized AI agent rules and skills for Claude Code, Codex, and OpenCode. Everything lives in
-this repo and gets projected onto `$HOME` with `stow` — no per-repo copying, no manual
+Centralized AI agent rules/skills *and* general shell/terminal config for macOS. Everything
+lives in this repo and gets projected onto `$HOME` with `stow` — no per-repo copying, no manual
 symlinking, no vendor lock-in to any one tool.
 
-Cursor is the one exception: it has no on-disk global-rules file to symlink into (see
-"Cursor is different" below) and no personal-skills concept at all.
+Cursor is the one exception for the agent-config half: it has no on-disk global-rules file to
+symlink into (see "Cursor is different" below) and no personal-skills concept at all.
 
 ## Layout
 
 ```
 atharva-dotfiles/
-├── .agents/                    # source of truth
+├── .agents/                    # source of truth for agent config
 │   ├── AGENTS.md                # canonical global instructions
 │   └── skills/                  # every skill, one dir per skill (or grouped: review/, learn-codebase/, provider-kserve/)
 │       └── registry.json        # generated index: name -> path -> description
@@ -24,9 +24,20 @@ atharva-dotfiles/
 ├── .config/opencode/
 │   ├── AGENTS.md → ../../.agents/AGENTS.md
 │   └── skills/*  → ../../../.agents/skills/<name>
+├── .zshrc, .zprofile, .gitconfig   # shell + git config (plain files, not symlinks — this IS the source)
+├── .config/ghostty/config          # terminal
+├── .config/herdr/config.toml       # Herdr workspace/keybind config
+├── .config/starship.toml           # prompt
 └── scripts/
-    └── link-skills.sh          # regenerates the flattened symlinks + registry.json
+    └── link-skills.sh          # regenerates the flattened skill symlinks + registry.json
 ```
+
+`fzf`, `eza`, and `zoxide` have no dedicated config files of their own — all three are wired up
+inline in `.zshrc` (shell integration + `eza` aliases under `# ALIASES`, fzf's own alias under
+`# FZF`). There's nothing separate to add for them beyond `.zshrc` itself.
+
+`.config/herdr/` on disk also has `session.json`, `*.log` files, and `.plugins.lock` — those are
+runtime state, not config, and are deliberately left untracked (only `config.toml` is here).
 
 ## What each agent reads
 
