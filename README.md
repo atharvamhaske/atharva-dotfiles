@@ -1,10 +1,11 @@
 # atharva-dotfiles
 
-AI agent rules/skills plus general shell/terminal config for macOS, all stowed onto `$HOME`
-from this repo. No per-repo copying, no manual symlinking, no lock-in to one tool.
+Every AI agent I use — Claude Code, Codex, OpenCode — plus my actual shell setup, all living in
+one repo and beamed onto `$HOME` with `stow`. The whole point: edit a file once, here, and it
+shows up everywhere it needs to. No copying an AGENTS.md into twelve repos by hand, no "wait,
+which version of this alias did I edit last."
 
-Cursor's the one holdout on the agent-config side — it has no on-disk global-rules file to
-symlink into (see "Cursor is different" below) and no personal-skills concept at all.
+Cursor doesn't play along, though — more on that below.
 
 ## Layout
 
@@ -32,17 +33,20 @@ atharva-dotfiles/
     └── link-skills.sh          # regenerates the flattened skill symlinks + registry.json
 ```
 
-`fzf`, `eza`, and `zoxide` don't have config files of their own — all three are wired up inline
-in `.zshrc` (shell integration, plus the `eza` and `f` aliases). Nothing to add for them beyond
-that file.
+Quick note on `fzf`, `eza`, and `zoxide` — you won't find a config file for any of them here,
+because they don't have one. All three just get `eval`'d into life inside `.zshrc`. If you're
+looking for where fuzzy-finding or the fancy `ls` aliases come from, that's the one file to
+check.
 
-`.config/herdr/` on disk also has `session.json`, log files, and `.plugins.lock`. Those are
-runtime state, not config, so only `config.toml` is tracked here.
+`.config/herdr/` on my actual machine is messier than what's tracked here — there's a
+`session.json`, some log files, a `.plugins.lock`. All runtime junk, none of it belongs in
+version control, so only `config.toml` made the cut.
 
-`.config/nvim/bin/brainrot-lsp` is a 6.5MB Linux binary that can't even run on macOS — a stray
-build artifact, not config. Left out. The nested `.git` at `~/.config/nvim` (remote:
-`jitesh117/nvim`) is untouched and stays separate; this repo just additionally tracks the same
-files via stow symlinks.
+And `.config/nvim/bin/brainrot-lsp`? That's a 6.5MB Linux binary sitting in a macOS config
+directory — can't even execute on this machine. Some stray build artifact from who knows when.
+Left it out entirely. Also worth knowing: `~/.config/nvim` already has its own `.git` pointed at
+`jitesh117/nvim` — I didn't touch that. It just keeps existing, quietly, alongside this repo now
+also tracking the same files through stow.
 
 ## What each agent reads
 
@@ -53,21 +57,25 @@ files via stow symlinks.
 | OpenCode    | `~/.config/opencode/AGENTS.md` | `./AGENTS.md`   | `~/.config/opencode/skills/*` |
 | Cursor      | *(none — see below)*        | `.cursor/rules/*.mdc`, per repo | *(none)* |
 
-Skills for the first three are automatic in every repo — no per-project setup. All three global
-configs point at the same file, `.agents/AGENTS.md`; edit it once and every tool sees the change
-immediately.
+Skills show up automatically for the first three, in every repo, no setup required per project.
+And all three global config paths ultimately point back to one file: `.agents/AGENTS.md`. Change
+it once, every tool picks it up immediately.
 
 ## Cursor is different
 
-Cursor's global "User Rules" (Settings → Rules → User Rules) live as app state, not a file — so
-there's nothing under `~/.cursor/` to symlink into, and no personal-skills directory either. Two
-options, neither automatic:
+Here's the thing about Cursor: its global "User Rules" (Settings → Rules → User Rules) live
+inside the app itself, not as a file sitting under `~/.cursor/`. So there's nothing to symlink.
+No hook for this repo to grab onto. And no personal-skills folder either — Cursor just doesn't
+have that concept.
 
-- **One-time, not per-repo:** paste `.agents/AGENTS.md` into Settings → Rules → User Rules once
-  per machine. It then applies everywhere, same as the other tools — this repo just can't push
-  updates to it, since it's not a file.
-- **Per-repo:** add `.cursor/rules/*.mdc` to a specific project for repo-scoped behavior. That's
-  the directory's intended, supported use — project rules, not global ones.
+Two ways around it, neither of them automatic:
+
+- **Once per machine, not per repo:** paste `.agents/AGENTS.md` straight into Settings → Rules →
+  User Rules. It'll apply everywhere after that, same as the other tools do — the only catch is
+  this repo can never push an update to it, since there's no file backing it.
+- **Per repo:** drop a `.cursor/rules/*.mdc` file into a specific project if you want Cursor
+  behaving differently just there. That's actually what that directory is built for — project
+  rules, not global ones.
 
 ## Stowing
 
@@ -80,17 +88,17 @@ stow -n -v -t ~ .   # dry run — read the output first
 stow -t ~ .         # apply
 ```
 
-`stow` only symlinks what's actually in this repo, and merges into existing real directories
-rather than replacing them. If `~/.claude/skills/` already has content from elsewhere (see
-"Coexisting with other skill managers"), stow adds this repo's skills alongside it — as long as
-nothing shares a name.
+`stow` is polite about it — it only symlinks what actually lives in this repo, and if
+`~/.claude/skills/` already has stuff in it from somewhere else (see "Coexisting with other
+skill managers" further down), it merges in rather than steamrolling anything. The only thing
+that trips it up is a genuine name collision.
 
-`.stow-local-ignore` keeps `scripts/`, `.git`, `README.md`, and `.gitignore` out of `$HOME` —
-repo-maintenance files, not config.
+`.stow-local-ignore` keeps `scripts/`, `.git`, `README.md`, and `.gitignore` from leaking into
+`$HOME` — those are repo bookkeeping, not something you want symlinked into your home directory.
 
 ### After editing `.agents/AGENTS.md`
 
-Nothing to do — it's already symlinked everywhere.
+Nothing. Seriously — it's already symlinked everywhere, so the edit is live the moment you save.
 
 ### After adding, renaming, or removing a skill
 
@@ -99,38 +107,43 @@ Nothing to do — it's already symlinked everywhere.
                             # and .agents/skills/registry.json
 ```
 
-`stow` doesn't need a re-run for skill *content* changes — those are already live through
-existing symlinks. Only re-run `link-skills.sh` when the skill directory *set* changes (added,
-renamed, removed). If `stow` then reports a new conflict, dry-run it again.
+No need to re-run `stow` just because a skill's *contents* changed — that's already flowing
+through existing symlinks. `link-skills.sh` only needs to run again when the *set* of skills
+changes (one gets added, renamed, or deleted). If `stow` complains about a new conflict after
+that, just dry-run it again and see what it's upset about.
 
 ## Skills
 
-Every skill lives once, under `.agents/skills/<name>/SKILL.md` — or nested a level deeper under
-a grouping dir (`.agents/skills/review/pr-multi-agent-review/`) for skills that are project- or
-theme-specific rather than general-purpose. `scripts/link-skills.sh` flattens every skill it
-finds, regardless of nesting, into a same-named symlink under each tool's `skills/` dir, since
-that's the shape Claude Code, Codex, and OpenCode need for discovery. `registry.json` is
-generated — don't hand-edit it.
+Each skill lives in exactly one place: `.agents/skills/<name>/SKILL.md`, or one level deeper
+under a grouping folder (`.agents/skills/review/pr-multi-agent-review/`) if it's the kind of
+skill that's tied to a specific project or theme rather than something general-purpose.
+`scripts/link-skills.sh` doesn't care how deep a skill is nested — it flattens everything into a
+same-named symlink under each tool's `skills/` directory, because that's the flat shape Claude
+Code, Codex, and OpenCode actually expect when they go looking for skills. `registry.json` gets
+generated from that pass — don't touch it by hand.
 
 ## Coexisting with other skill managers
 
-`~/.agents` may already belong to `npx skills` (skills.sh), tracked via
-`~/.agents/.skill-lock.json` — a separate system from this repo. `stow` merges with it instead of
-taking it over: this repo's `AGENTS.md` and skills get added as individual symlinks alongside
-whatever `npx skills` already installed. Only a real name collision needs manual resolution —
-rename or remove one side with `npx skills` before re-stowing.
+If you're also running `npx skills` (skills.sh), it's probably already claimed `~/.agents` for
+itself, tracking everything through `~/.agents/.skill-lock.json`. That's a completely separate
+system from this repo, and `stow` is built to get along with it rather than fight it — this
+repo's `AGENTS.md` and skills just get added in as individual symlinks next to whatever `npx
+skills` put there already. The only time you'll need to step in is a real name collision, and
+even then it's a one-line fix: rename or remove one side through `npx skills` before you stow
+again.
 
 ## Adding a new rule for all agents
 
-1. Edit `.agents/AGENTS.md` for something universal, or add a skill under
-   `.agents/skills/<name>/SKILL.md` for something scoped/triggered.
-2. New skill → run `./scripts/link-skills.sh`.
-3. Commit and push.
+1. Something universal? Edit `.agents/AGENTS.md` directly. Something scoped or trigger-based?
+   New skill under `.agents/skills/<name>/SKILL.md`.
+2. Added a skill → run `./scripts/link-skills.sh`.
+3. Commit, push, done.
 
 ## What NOT to track
 
-Machine-local state under `~/.claude/`, `~/.codex/`, etc. that never gets committed: `auth.json`
-/ `.credentials.json` (secrets), `history.jsonl` / `sessions/` (conversation history), `cache/` /
-`backups/` / `downloads/` (ephemeral), `settings.json` / `settings.local.json`
-(machine-specific), `*.sqlite` (local state), and `~/.agents/.skill-lock.json` (belongs to
-`npx skills`, not this repo).
+A bunch of machine-local stuff lives under `~/.claude/`, `~/.codex/`, and friends, and none of
+it belongs in this repo: `auth.json` / `.credentials.json` (that's just secrets), `history.jsonl`
+/ `sessions/` (your actual conversation history), `cache/` / `backups/` / `downloads/` (ephemeral
+by definition), `settings.json` / `settings.local.json` (specific to this machine),
+`*.sqlite` (local state), and `~/.agents/.skill-lock.json` — that one's `npx skills`' business,
+not this repo's.
