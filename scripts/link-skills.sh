@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Flattens every skill under .agents/skills/**/SKILL.md into a same-named
-# symlink under each tool's skills/ dir (.claude, .codex, .config/opencode),
-# and regenerates .agents/skills/registry.json. Idempotent — safe to re-run
-# after adding/removing skills. Run from the repo root.
+# symlink under each tool's skills/ dir (.claude, .codex, .config/opencode)
+# plus $HOME/.cursor/skills (Cursor's personal dir — not stowed, ~/.cursor
+# is the app tree). Regenerates .agents/skills/registry.json. Idempotent.
+# Run from the repo root.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -15,6 +16,14 @@ for t in "${TARGETS[@]}"; do
   mkdir -p "$t"
   find "$t" -maxdepth 1 -type l -delete
 done
+
+# Only our symlinks. Leave real dirs (cc-skills-golang, ponyy, …) alone.
+HOME_CURSOR=""
+if [[ -d "${HOME}/.cursor" ]]; then
+  HOME_CURSOR="${HOME}/.cursor/skills"
+  mkdir -p "$HOME_CURSOR"
+  find "$HOME_CURSOR" -maxdepth 1 -type l -delete
+fi
 
 registry_entries=()
 
@@ -29,6 +38,15 @@ while IFS= read -r skill_md; do
     for ((i = 0; i < depth; i++)); do prefix="../$prefix"; done
     ln -sfn "${prefix}${rel_from_repo}" "$t/$skill_name"
   done
+
+  if [[ -n "$HOME_CURSOR" ]]; then
+    dest="$HOME_CURSOR/$skill_name"
+    if [[ -e "$dest" && ! -L "$dest" ]]; then
+      echo "skip Cursor: $dest exists and is not a symlink" >&2
+    else
+      ln -sfn "$skill_dir" "$dest"
+    fi
+  fi
 
   desc="$(sed -n 's/^description: *//p' "$skill_md" | head -1 | sed 's/^"//;s/"$//;s/|$//')"
   registry_entries+=("  \"$skill_name\": {\"path\": \"skills/${rel_from_repo#.agents/skills/}\", \"description\": $(python3 -c "import json,sys; print(json.dumps(sys.argv[1]))" "$desc")}")
@@ -46,4 +64,9 @@ done < <(find "$SKILLS_SRC" -name SKILL.md | sort)
 } > "$SKILLS_SRC/registry.json"
 
 echo "Linked ${#registry_entries[@]} skills into: ${TARGETS[*]}"
+if [[ -n "$HOME_CURSOR" ]]; then
+  echo "Linked ${#registry_entries[@]} skills into: $HOME_CURSOR"
+else
+  echo "skip Cursor: $HOME/.cursor is missing"
+fi
 echo "Wrote $SKILLS_SRC/registry.json"
