@@ -101,6 +101,17 @@ Nothing. Seriously — it's already symlinked everywhere, so the edit is live th
                             # ~/.cursor/skills/*, and .agents/skills/registry.json
 ```
 
+### Git hooks (no Cursor trailers)
+
+```bash
+stow -t ~ .    # if not already stowed
+./scripts/install-git-hooks.sh
+```
+
+Sets `core.hooksPath` to `~/.config/git/hooks`. `prepare-commit-msg` strips
+`Co-authored-by: Cursor` / `Made-with: Cursor` lines; `commit-msg` rejects if
+any remain.
+
 No need to re-run `stow` just because a skill's *contents* changed — that's already flowing
 through existing symlinks. `link-skills.sh` only needs to run again when the *set* of skills
 changes (one gets added, renamed, or deleted). If `stow` complains about a new conflict after
