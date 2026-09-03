@@ -17,6 +17,6 @@ for hook in prepare-commit-msg commit-msg; do
   install -m 755 "$SRC/$hook" "$DEST/$hook"
 done
 
-git config --global core.hooksPath "$DEST"
+git config --global core.hooksPath "~/.config/git/hooks"
 echo "core.hooksPath=$DEST"
 echo "Hooks installed. Cursor/AI commit trailers are stripped and blocked."
