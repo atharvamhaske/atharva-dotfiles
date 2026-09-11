@@ -1,5 +1,5 @@
 interface:
-  display_name: Teach
+  display_name: Thermo Nuclear Code Quality Review
 
 policy:
   allow_implicit_invocation: false
