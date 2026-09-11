@@ -87,8 +87,10 @@ stow -t ~ .         # apply
 skill managers" further down), it merges in rather than steamrolling anything. The only thing
 that trips it up is a genuine name collision.
 
-`.stow-local-ignore` keeps `scripts/`, `.git`, `README.md`, and `.gitignore` from leaking into
-`$HOME` — those are repo bookkeeping, not something you want symlinked into your home directory.
+`.stow-local-ignore` keeps `scripts/`, `.git`, `README.md`, `.gitignore`, and
+`.config/git/hooks` out of `$HOME`. The first four are repo bookkeeping. The
+hooks directory is copied by `scripts/install-git-hooks.sh`, so stow must not
+try to overlay those copies with symlinks.
 
 ### After editing `.agents/AGENTS.md`
 
@@ -104,13 +106,19 @@ Nothing. Seriously — it's already symlinked everywhere, so the edit is live th
 ### Git hooks (no Cursor trailers)
 
 ```bash
-stow -t ~ .    # if not already stowed
+stow -t ~ .
 ./scripts/install-git-hooks.sh
 ```
 
-Sets `core.hooksPath` to `~/.config/git/hooks`. `prepare-commit-msg` strips
-`Co-authored-by: Cursor` / `Made-with: Cursor` lines; `commit-msg` rejects if
-any remain.
+The script copies `prepare-commit-msg` and `commit-msg` into
+`~/.config/git/hooks` and sets `core.hooksPath` there. `prepare-commit-msg`
+strips `Co-authored-by: Cursor` / `Made-with: Cursor` lines. `commit-msg`
+rejects the commit if any remain.
+
+If an older copy of those hooks already exists as regular files, stow used
+to abort with "neither a link nor a directory". Stow now ignores that
+directory. Run `stow -t ~ .` for everything else, then re-run
+`./scripts/install-git-hooks.sh` whenever the hook scripts change.
 
 No need to re-run `stow` just because a skill's *contents* changed — that's already flowing
 through existing symlinks. `link-skills.sh` only needs to run again when the *set* of skills

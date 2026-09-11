@@ -3,3 +3,5 @@
 ^/\.git$
 ^/README\.md$
 ^/\.gitignore$
+# Copied by scripts/install-git-hooks.sh. Stow must not replace those copies.
+^/\.config/git/hooks

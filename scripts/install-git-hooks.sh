@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Point global git at ~/.config/git/hooks (stowed from this repo).
-# Idempotent — safe to re-run after stow or hook updates.
+# Copy the Cursor-trailer hooks into ~/.config/git/hooks and point git at them.
+# These files are copies, not stow symlinks. Stow ignores this directory on
+# purpose so a second stow does not abort over the copies.
+# Idempotent. Safe to re-run after hook updates.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
