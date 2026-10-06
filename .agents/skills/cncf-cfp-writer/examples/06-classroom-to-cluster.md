@@ -1,0 +1,5 @@
+# From Classroom to Cluster: Embracing Kubernetes as a Student and Contributing to its Development
+
+Oftentimes, Students who try to get involved within the Kubernetes Ecosystem are shed by the overwhelming nature of the community. With several SIGs working on different projects and meetings happening around, it becomes extremely difficult to find your way to get involved in the project. As the ecosystem grows, it is essential to have a sustainable framework that streamlines the process of getting more students involved and building future leaders. Students often grapple with managing their academic workload while pursuing their passion for contributing and learning Kubernetes.
+
+In this panel talk, we will be interacting with some of the greatest contributors to the community who started their way as Students. This will bring light to the challenges each one of us goes through as students with minimal information and a solution to it. A key motivation for this panel discussion is to emphasize on building the next generation of cloud-native.
