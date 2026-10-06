@@ -43,8 +43,9 @@ Fill `TEMPLATE.md` only:
    build, 4 to 6 bullets, close
 4. A counts table proving each field is inside min/max
 
-Copy the shape of `examples/01` to `examples/05`. Skip `examples/06` for the
-hook. That one is a panel with a long first paragraph.
+Copy the shape of `examples/01` to `examples/05`. Use `examples/07` when the
+talk is a three-paragraph field guide with no bullets. Skip `examples/06` for
+the hook. That one is a panel with a long first paragraph.
 
 Write one markdown file in the working directory unless the user asked for chat.
 
