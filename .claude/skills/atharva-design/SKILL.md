@@ -1,6 +1,6 @@
 ---
 name: atharva-design
-description: Atharva's personal UI taste for building and restyling web interfaces, layered on top of Emil Kowalski's emil-design-eng skill. Minimal white canvas, one accent color, a narrow centered frame, tactile pressable buttons, Tailwind-only styling composed with cn() (clsx + tailwind-merge) and cva variants. Use this skill whenever the user asks to build, remake, restyle, or polish a landing page, marketing site, hero section, navbar, button, card, component, or any frontend UI, mentions "my style", "atharva design", gofunc-style minimalism, Tailwind classes, cn/cva/clsx/tailwind-merge, or wants something to "look clean" or "feel premium", even if they don't name this skill.
+description: Atharva's personal UI taste for building and restyling web interfaces, layered on top of Emil Kowalski's emil-design-eng skill. Minimal light canvas, one accent color, a narrow centered frame, tactile pressable buttons, Tailwind-only styling composed with cn() (clsx + tailwind-merge) and cva variants. Use this skill whenever the user asks to build, remake, restyle, or polish a landing page, marketing site, hero section, navbar, button, card, component, or any frontend UI, mentions "my style", "atharva design", gofunc-style minimalism, Tailwind classes, cn/cva/clsx/tailwind-merge, or wants something to "look clean" or "feel premium", even if they don't name this skill.
 ---
 
 # Atharva Design
