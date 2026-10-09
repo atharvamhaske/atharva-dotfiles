@@ -24,6 +24,10 @@ atharva-dotfiles/
 ├── .config/opencode/
 │   ├── AGENTS.md → ../../.agents/AGENTS.md
 │   └── skills/*  → ../../../.agents/skills/<name>
+├── .pi/agent/
+│   ├── AGENTS.md                # Pi-only explanation and code-reasoning rules
+│   ├── APPEND_SYSTEM.md → ../../.agents/AGENTS.md
+│   └── skills/*  → ../../../.claude/skills/<name>   (Claude-only skills; Pi reads ~/.agents/skills itself)
 ├── .zshrc, .zprofile, .gitconfig   # shell + git config — plain files, this IS the source
 ├── .config/nvim/                   # NvChad-based nvim config
 ├── .config/ghostty/config          # terminal
@@ -55,7 +59,14 @@ also tracking the same files through stow.
 | Claude Code | `~/.claude/CLAUDE.md`       | `./CLAUDE.md`      | `~/.claude/skills/*` |
 | Codex       | `~/.codex/AGENTS.md`        | `./AGENTS.md`      | `~/.codex/skills/*` |
 | OpenCode    | `~/.config/opencode/AGENTS.md` | `./AGENTS.md`   | `~/.config/opencode/skills/*` |
+| Pi          | `~/.pi/agent/AGENTS.md` (rules) + `~/.pi/agent/APPEND_SYSTEM.md` (shared AGENTS.md) | `./AGENTS.md` | `~/.agents/skills/*` + `~/.pi/agent/skills/*` |
 | Cursor      | *(User Rules — see below)*  | `.cursor/rules/*.mdc`, per repo | `~/.cursor/skills/*` |
+
+Pi loads both global files into its system prompt at startup, so it reads them
+before every answer. Run `/reload` in an open Pi session after you edit them.
+Pi already scans `~/.agents/skills`, so `link-skills.sh` links only the
+Claude-only skills into `.pi/agent/skills`. Linking the shared skills there too
+would make Pi warn about a name collision for each one.
 
 Skills show up automatically for all four, in every repo, no setup required per project.
 Claude / Codex / OpenCode get theirs via `stow`. Cursor gets the same flattened set written

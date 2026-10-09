@@ -63,7 +63,23 @@ done < <(find "$SKILLS_SRC" -name SKILL.md | sort)
   echo "}"
 } > "$SKILLS_SRC/registry.json"
 
+# Pi reads ~/.agents/skills on its own (Agent Skills location), so the
+# .agents skills need no Pi link. Linking them again under .pi/agent/skills
+# would make Pi warn about a name collision for each one. Only Claude-only
+# skills (real dirs with a SKILL.md in .claude/skills) get a Pi link.
+PI_SKILLS=".pi/agent/skills"
+mkdir -p "$PI_SKILLS"
+find "$PI_SKILLS" -maxdepth 1 -type l -delete
+pi_count=0
+for d in .claude/skills/*/; do
+  d="${d%/}"
+  [[ -L "$d" || ! -f "$d/SKILL.md" ]] && continue
+  ln -sfn "../../../$d" "$PI_SKILLS/$(basename "$d")"
+  pi_count=$((pi_count + 1))
+done
+
 echo "Linked ${#registry_entries[@]} skills into: ${TARGETS[*]}"
+echo "Linked $pi_count Claude-only skills into: $PI_SKILLS"
 if [[ -n "$HOME_CURSOR" ]]; then
   echo "Linked ${#registry_entries[@]} skills into: $HOME_CURSOR"
 else
